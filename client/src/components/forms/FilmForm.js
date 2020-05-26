@@ -23,7 +23,7 @@ class FilmForm extends Component {
   }
 
   componentDidMount() {
-    if (this.props.film._id) {
+    if (this.props.film && this.props.film._id) {
       this.setState({data: this.props.film})
     }
   }
@@ -31,13 +31,13 @@ class FilmForm extends Component {
   static getDerivedStateFromProps(props, state) {
     const {film} = props
     const {data} = state
-    if (film._id && film._id !== data._id) {
+    if (film && film._id && film._id !== data._id) {
       return {
         data: film,
         errors: {},
       }
     }
-    if (!film._id && data._id !== null) {
+    if ((!film || !film._id) && data._id !== null) {
       return {
         data: initData,
         errors: {},
@@ -141,7 +141,7 @@ class FilmForm extends Component {
             {/* Description END  */}
           </div>
 
-          {/* Image START 
+          {/* Image START
           "http://via.placeholder.com/250x250"
           */}
           <div className="four wide column">
