@@ -2,10 +2,11 @@ import React, {Component} from "react"
 import _orderBy from "lodash/orderBy"
 import FilmsList from "./films"
 import FilmForm from "./forms/FilmForm"
+import FilmCard from "./films/FilmCard"
 import FilmContext from "./context/FilmContext"
 import api from '../api'
-import {find} from "lodash/collection";
-import {Route} from "react-router-dom";
+import {find} from "lodash/collection"
+import {Route} from "react-router-dom"
 
 export class FilmsPage extends Component {
   state = {
@@ -85,6 +86,19 @@ export class FilmsPage extends Component {
             render={props => (
               <div className="six wide column">
                 <FilmForm
+                  submit={this.saveFilm}
+                  film={find(this.state.films, { _id: props.match.params._id,}) || {}}
+                />
+              </div>
+            )}
+          />
+
+          <Route
+            exact
+            path="/film/:_id"
+            render={props => (
+              <div className="six wide column">
+                <FilmCard
                   submit={this.saveFilm}
                   film={find(this.state.films, { _id: props.match.params._id,})}
                 />

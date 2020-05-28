@@ -10,6 +10,7 @@ const FilmCard = ({film}) => {
   const hideConfirm = () => setConfirm(false)
 
   const {deleteFilm} = useContext(FilmContext)
+
   return (
     <div className="ui card">
       <span className="ui right corner label">
@@ -24,7 +25,9 @@ const FilmCard = ({film}) => {
       </div>
 
       <div className="content">
-        <span className="header">{film.title}</span>
+        <Link to={`/film/${film._id}`} className="header">
+          {film.title}
+        </Link>
         <div className="meta">
           <i className="icon users"></i> {film.director}
           <span className="right floated">

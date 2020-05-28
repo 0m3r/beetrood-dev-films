@@ -1,8 +1,9 @@
 import React, {Component} from "react"
 import TopNavigation from "./TopNavigation"
-import {Route} from "react-router-dom";
-import HomePage from "./HomePage";
-import {FilmsPage} from "./FilmsPage";
+import {Route} from "react-router-dom"
+import HomePage from "./HomePage"
+import {FilmsPage} from "./FilmsPage"
+import Film from "./films/Film"
 
 export class App extends Component {
   render() {
@@ -12,7 +13,8 @@ export class App extends Component {
         <Route exact path="/">
           <HomePage/>
         </Route>
-        <Route path="/films" component={FilmsPage}/>
+        <Route path="/films" component={FilmsPage} />
+        <Route path="/film/:_id" exact component={Film} />
       </div>
     )
   }
