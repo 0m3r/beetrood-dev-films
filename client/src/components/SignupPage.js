@@ -7,6 +7,7 @@ function SignupPage({history}) {
     const submit = user =>
         api.users.create(user)
             .then(() => history.push('/login'))
+
   return (
     <div className="ui grid">
       <div className="eight wide column">

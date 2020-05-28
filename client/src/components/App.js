@@ -1,10 +1,15 @@
 import React, {Component} from "react"
 import TopNavigation from "./TopNavigation"
 import {Route} from "react-router-dom"
-import HomePage from "./HomePage"
-import {FilmsPage} from "./FilmsPage"
-import SignupPage from "./SignupPage"
+// import HomePage from "./HomePage"
+// import {FilmsPage} from "./FilmsPage"
+// import SignupPage from "./SignupPage"
 import Film from "./films/Film"
+import {Async, lazyImport} from "./async"
+
+const HomePage = Async(lazyImport("./HomePage"))
+const FilmsPage = Async(lazyImport("./FilmsPage"))
+const SignupPage = Async(lazyImport("./SignupPage"))
 
 export class App extends Component {
 
