@@ -8,6 +8,7 @@ import Film from "./films/Film"
 import {Async, lazyImport} from "./async"
 import {setAuthorizationHeader} from "../utils"
 
+
 const HomePage = Async(lazyImport("./HomePage"))
 const FilmsPage = Async(lazyImport("./FilmsPage"))
 const SignupPage = Async(lazyImport("./SignupPage"))
@@ -35,7 +36,7 @@ export class App extends Component {
   }
 
   login = (token) => {
-    this.setState({user:{ token: token}})
+    this.setState({user:{ token: token, role: 'admin'}})
     localStorage.filmsToken = token
     setAuthorizationHeader(token)
   }
@@ -43,11 +44,14 @@ export class App extends Component {
   render() {
     return (
       <div className="ui container pt-3">
+        <FlashMessage>some message</FlashMessage>
         <TopNavigation logout={this.logout} isAuth={this.state.user.token}/>
         <Route exact path="/">
           <HomePage/>
         </Route>
-        <Route path="/films" component={FilmsPage} />
+        <Route path="/films"  render={
+          props => (<FilmsPage {...props} user={this.state.user}/>)
+        }/>
         <Route path="/film/:_id" exact component={Film} />
         <Route path="/signup" exact component={SignupPage} />
         <Route path="/login" exact render={
