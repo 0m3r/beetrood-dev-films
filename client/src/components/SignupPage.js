@@ -2,11 +2,14 @@ import React from "react"
 import SignupForm from "./forms/SignupForm"
 import api from "./../api"
 
-function SignupPage({history}) {
+function SignupPage({history, signup}) {
 
     const submit = user =>
         api.users.create(user)
-            .then(() => history.push('/login'))
+            .then(() => {
+              history.push('/login');
+              signup()
+            })
 
   return (
     <div className="ui grid">
