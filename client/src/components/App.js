@@ -1,12 +1,15 @@
-import React, {Component} from "react"
-import TopNavigation from "./TopNavigation"
-import {Route} from "react-router-dom"
+import React, {Component} from "react";
+import TopNavigation from "./TopNavigation";
+import {Route} from "react-router-dom";
+import jwtDecode from "jwt-decode";
+
+
 // import HomePage from "./HomePage"
 // import {FilmsPage} from "./FilmsPage"
 // import SignupPage from "./SignupPage"
-import Film from "./films/Film"
-import {Async, lazyImport} from "./async"
-import {setAuthorizationHeader} from "../utils"
+import Film from "./films/Film";
+import {Async, lazyImport} from "./async";
+import {setAuthorizationHeader} from "../utils";
 import FlashMessage from "./FlashMessage"
 
 
@@ -28,7 +31,13 @@ export class App extends Component {
 
   componentDidMount() {
     if (localStorage.filmsToken) {
-      this.setState({user: {token: localStorage.filmsToken}})
+      this.setState({
+
+        user: {
+          token: localStorage.filmsToken,
+          role: jwtDecode(localStorage.filmsToken).user.role
+        }
+      })
       setAuthorizationHeader(localStorage.filmsToken)
     }
   }
@@ -41,7 +50,11 @@ export class App extends Component {
   }
 
   login = (token) => {
-    this.setState({user:{ token: token, role: 'admin'}})
+    console.log(jwtDecode(token));
+    this.setState({user:{
+      token: token,
+      role: jwtDecode(token).user.role
+    }})
     localStorage.filmsToken = token
     setAuthorizationHeader(token)
     this.setMessage('You are welcome')
@@ -55,7 +68,7 @@ export class App extends Component {
     return (
       <div className="ui container pt-3">
         <FlashMessage>{this.state.message}</FlashMessage>
-        <TopNavigation logout={this.logout} isAuth={this.state.user.token}/>
+        <TopNavigation logout={this.logout} isAuth={this.state.user.token} isAdmin={this.state.user.role === 'admin'} />
         <Route exact path="/">
           <HomePage/>
         </Route>

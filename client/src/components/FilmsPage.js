@@ -67,6 +67,7 @@ export class FilmsPage extends Component {
         value={{
           toggleFeatured: this.toggleFeatured,
           deleteFilm: this.deleteFilm,
+          user: this.props.user,
         }}
       >
         <div className="ui stackable grid">

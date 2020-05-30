@@ -9,7 +9,7 @@
   "rules": {
     "valid-typeof": "error",
     "no-console": "off",
-    "semi": ["error", "never"]
+    "semi": "off"
   },
   "env": {
     "browser": true

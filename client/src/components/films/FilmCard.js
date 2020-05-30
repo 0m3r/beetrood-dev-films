@@ -9,34 +9,9 @@ const FilmCard = ({film}) => {
   const showConfirm = () => setConfirm(true)
   const hideConfirm = () => setConfirm(false)
 
-  const {deleteFilm} = useContext(FilmContext)
+  const {deleteFilm, user} = useContext(FilmContext)
 
-  return (
-    <div className="ui card">
-      <span className="ui right corner label">
-        <i className="empty star icon"></i>
-      </span>
-      <div className="image">
-        <span className="ui green label ribbon">$ {film.price} </span>
-
-        <Featured featured={film.featured} id={film._id} />
-
-        <img src={film.img} alt={film.title} />
-      </div>
-
-      <div className="content">
-        <Link to={`/film/${film._id}`} className="header">
-          {film.title}
-        </Link>
-        <div className="meta">
-          <i className="icon users"></i> {film.director}
-          <span className="right floated">
-            <i className="icon wait right"></i> {film.duration} min
-          </span>
-        </div>
-      </div>
-
-      <div className="extra content">
+  const adminAction = (<div className="extra content">
         <div className="ui two buttons">
           {confirm ? (
             <>
@@ -59,7 +34,44 @@ const FilmCard = ({film}) => {
             </>
           )}
         </div>
+      </div>)
+
+  const userAction = (
+      <div className="extra content">
+        <button className="ui green basic button ">Add to cart</button>
       </div>
+  )
+
+  return (
+    <div className="ui card">
+      <span className="ui right corner label">
+        <i className="empty star icon"></i>
+      </span>
+      <div className="image">
+        <span className="ui green label ribbon">$ {film.price} </span>
+
+        <Featured featured={film.featured} id={film._id} />
+
+        <img src={film.img} alt={film.title} />
+      </div>
+
+      <div className="content">
+
+        {user.token && user.role === "admin" && adminAction}
+        {user.token && user.role === "user" && userAction}
+
+        <Link to={`/film/${film._id}`} className="header">
+          {film.title}
+        </Link>
+        <div className="meta">
+          <i className="icon users"></i> {film.director}
+          <span className="right floated">
+            <i className="icon wait right"></i> {film.duration} min
+          </span>
+        </div>
+      </div>
+
+
     </div>
   )
 }
