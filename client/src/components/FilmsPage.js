@@ -7,6 +7,8 @@ import FilmContext from "./context/FilmContext"
 import api from '../api'
 import {find} from "lodash/collection"
 import {Route, Redirect} from "react-router-dom"
+import AdminRoute from "../hoc/AdminRoute"
+
 
 export class FilmsPage extends Component {
   state = {
@@ -71,21 +73,19 @@ export class FilmsPage extends Component {
         }}
       >
         <div className="ui stackable grid">
-
-          {this.props.user.role === "admin" ? (
-            <>
-              <Route
-                exact
-                path="/films/new"
-                render={() => (
-                  <div className="six wide column">
-                    <FilmForm submit={this.saveFilm} film={{}} />
-                  </div>
-                )}
+          <>
+              <AdminRoute
+                 path="/films/new"
+                 user={this.props.user}
+                 render={() => (
+                    <div className="six wide column">
+                      <FilmForm submit={this.saveFilm} film={{}} />
+                    </div>
+                  )}
               />
-
-              <Route
+              <AdminRoute
                 path="/films/edit/:_id"
+                user={this.props.user}
                 render={props => (
                   <div className="six wide column">
                     <FilmForm
@@ -95,10 +95,14 @@ export class FilmsPage extends Component {
                   </div>
                 )}
               />
+          </>
+
+          {/*this.props.user.role === "admin" ? (
+            <>
             </>
           ) : (
             <Route path="/films/*" render={() => <Redirect to="/films" />} />
-          )}
+          )*/}
 
           <Route
             exact
