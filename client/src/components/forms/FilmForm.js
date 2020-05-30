@@ -1,7 +1,8 @@
-import React, {Component} from "react"
+import React, {useState, useEffect} from "react"
 import ReactImageFallback from "react-image-fallback"
 import FormMessage from "./FormMessage"
 import {Link, Redirect} from "react-router-dom";
+import setFormObj from "./FormUtils";
 
 const initData = {
 	_id: null,
@@ -14,58 +15,19 @@ const initData = {
   featured: false,
 }
 
-class FilmForm extends Component {
-  state = {
-    loading: false,
-    data: initData,
-    errors: {},
-    redirect: false
-  }
+const FilmForm = props => {
+  // state = {
+  //   loading: false,
+  //   data: initData,
+  //   errors: {},
+  //   redirect: false
+  // }
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState(initData);
+  const [errors, setErrors] = useState({});
+  const [redirect, setRedirect] = useState(false);
 
-  componentDidMount() {
-    if (this.props.film && this.props.film._id) {
-      this.setState({data: this.props.film})
-    }
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    const {film} = props
-    const {data} = state
-    if (film && film._id && film._id !== data._id) {
-      return {
-        data: film,
-        errors: {},
-      }
-    }
-    if ((!film || !film._id) && data._id !== null) {
-      return {
-        data: initData,
-        errors: {},
-      }
-    }
-    return null
-  }
-
-  handleStringChange = ({target}) =>
-    this.setState({
-      data: {...this.state.data, [target.name]: target.value},
-      errors: {...this.state.errors, [target.name]: ""},
-    })
-
-  handleNumberChange = ({target}) => {
-    const val = target.value.replace(/\D/g, "")
-    this.setState({
-      data: {...this.state.data, [target.name]: Number(val)},
-      errors: {...this.state.errors, [target.name]: ""},
-    })
-  }
-
-  handleCheckboxChange = ({target}) =>
-    this.setState({
-      data: {...this.state.data, [target.name]: target.checked},
-    })
-
-  validate = data => {
+  const validate = data => {
     const errors = {}
     if (!data.title) errors.title = "title cannot be blank"
     if (!data.description) errors.description = "Description cannot be blank"
@@ -84,28 +46,35 @@ class FilmForm extends Component {
     return errors
   }
 
-  handleSubmit = e => {
-    e.preventDefault()
-    const errors = this.validate(this.state.data)
-    this.setState({errors})
-    if (Object.keys(errors).length === 0) {
-      this.setState({loading: true});
+  useEffect(() => {
+    if (props.film._id && form._id !== props.film._id) {
+      setForm(props.film)
+    } else {
+      setForm(initData)
+    }
+  }, [props.film])
 
-      this.props
-          .submit(this.state.data)
-          .then(() => this.setState({redirect: true}))
-          .catch(err => this.setState({errors: err.response.data.errors}))
-          .finally(() => this.setState({loading: false}))
-      // this.setState({data: initData})
+  const handleSubmit = e => {
+    e.preventDefault()
+    const errors = validate(form)
+    setErrors(errors)
+    if (Object.keys(errors).length === 0) {
+      setLoading(true)
+      props.submit(form).catch(err => {
+        setErrors(err.response.data.errors)
+        setLoading(false)
+        // return true
+      })
     }
   }
 
-  render() {
-    const {data, errors, loading, redirect} = this.state
-    const classForm = loading ? "ui form loading" : "ui form";
+  const classForm = loading ? "ui form loading" : "ui form";
+
+  // render() {
+    // const {data, errors, loading, redirect} = this.state
 
     return (
-      <form onSubmit={this.handleSubmit} className={classForm}>
+      <form onSubmit={setFormObj(form, setForm)} className={classForm}>
         {/*{redirect && <Redirect to="/films"/>}*/}
 
         {/* ui grid START */}
@@ -115,8 +84,8 @@ class FilmForm extends Component {
             <div className={errors.title ? "field error" : "field"}>
               <label>Film title</label>
               <input
-                value={data.title}
-                onChange={this.handleStringChange}
+                value={form.title}
+                onChange={handleSubmit}
                 type="text"
                 name="title"
                 id="name"
@@ -130,8 +99,8 @@ class FilmForm extends Component {
             <div className={errors.description ? "field error" : "field"}>
               <label>Film description</label>
               <textarea
-                value={data.description}
-                onChange={this.handleStringChange}
+                value={form.description}
+                onChange={handleSubmit}
                 name="description"
                 id="description"
                 placeholder="film description"
@@ -146,9 +115,9 @@ class FilmForm extends Component {
           */}
           <div className="four wide column">
             <ReactImageFallback
-              src={data.img}
+              src={form.img}
               fallbackImage="http://via.placeholder.com/250x250"
-              alt={data.title}
+              alt={form.title}
               className="ui image"
             />
           </div>
@@ -157,8 +126,8 @@ class FilmForm extends Component {
             <div className={errors.img ? "field error" : "field"}>
               <label>Image</label>
               <input
-                value={data.img}
-                onChange={this.handleStringChange}
+                value={form.img}
+                onChange={handleSubmit}
                 type="text"
                 name="img"
                 id="img"
@@ -174,8 +143,8 @@ class FilmForm extends Component {
             <div className={errors.director ? "field error" : "field"}>
               <label>Director</label>
               <input
-                value={data.director}
-                onChange={this.handleStringChange}
+                value={form.director}
+                onChange={handleSubmit}
                 type="text"
                 name="director"
                 id="director"
@@ -191,8 +160,8 @@ class FilmForm extends Component {
             <div className={errors.duration ? "field error" : "field"}>
               <label>Duration</label>
               <input
-                value={data.duration}
-                onChange={this.handleNumberChange}
+                value={form.duration}
+                onChange={handleSubmit}
                 type="number"
                 name="duration"
                 id="duration"
@@ -209,8 +178,8 @@ class FilmForm extends Component {
             <div className={errors.price ? "field error" : "field"}>
               <label>Price</label>
               <input
-                value={data.price}
-                onChange={this.handleNumberChange}
+                value={form.price}
+                onChange={handleSubmit}
                 type="number"
                 name="price"
                 id="price"
@@ -225,12 +194,12 @@ class FilmForm extends Component {
           <div className="six wide column inline field">
             <label htmlFor="featured">Featured</label>
             <input
-              onChange={this.handleCheckboxChange}
-              value={data.featured}
+              onChange={handleSubmit}
+              value={form.featured}
               type="checkbox"
               name="featured"
               id="featured"
-              checked={data.featured}
+              checked={form.featured}
             />
           </div>
           {/*  Featured END   */}
@@ -254,6 +223,5 @@ class FilmForm extends Component {
       </form>
     )
   }
-}
 
 export default FilmForm
