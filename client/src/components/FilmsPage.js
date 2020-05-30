@@ -97,12 +97,9 @@ export class FilmsPage extends Component {
               />
           </>
 
-          {/*this.props.user.role === "admin" ? (
-            <>
-            </>
-          ) : (
+          {this.props.user.role !== "admin" && (
             <Route path="/films/*" render={() => <Redirect to="/films" />} />
-          )*/}
+          )}
 
           <Route
             exact
