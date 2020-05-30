@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from "react"
+import React, {useEffect, useState} from "react"
 import ReactImageFallback from "react-image-fallback"
 import FormMessage from "./FormMessage"
-import {Link, Redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 import setFormObj from "./FormUtils";
 
 const initData = {
-	_id: null,
+  _id: null,
   title: "",
   img: "",
   director: "",
@@ -15,17 +15,19 @@ const initData = {
   featured: false,
 }
 
-const FilmForm = props => {
-  // state = {
-  //   loading: false,
-  //   data: initData,
-  //   errors: {},
-  //   redirect: false
-  // }
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState(initData);
-  const [errors, setErrors] = useState({});
-  const [redirect, setRedirect] = useState(false);
+const FilmForm = (props) => {
+
+  const [data, setData] = useState(initData)
+  const [errors, setErrors] = useState({})
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (props.film._id && data._id !== props.film._id) {
+      setData(props.film)
+    } else {
+      setData(initData)
+    }
+  }, [props.film])
 
   const validate = data => {
     const errors = {}
@@ -46,21 +48,13 @@ const FilmForm = props => {
     return errors
   }
 
-  useEffect(() => {
-    if (props.film._id && form._id !== props.film._id) {
-      setForm(props.film)
-    } else {
-      setForm(initData)
-    }
-  }, [props.film])
-
   const handleSubmit = e => {
     e.preventDefault()
-    const errors = validate(form)
+    const errors = validate(data)
     setErrors(errors)
     if (Object.keys(errors).length === 0) {
       setLoading(true)
-      props.submit(form).catch(err => {
+      props.submit(data).catch(err => {
         setErrors(err.response.data.errors)
         setLoading(false)
         // return true
@@ -70,158 +64,154 @@ const FilmForm = props => {
 
   const classForm = loading ? "ui form loading" : "ui form";
 
-  // render() {
-    // const {data, errors, loading, redirect} = this.state
+  return (
+    <form onSubmit={handleSubmit} className={classForm}>
 
-    return (
-      <form onSubmit={setFormObj(form, setForm)} className={classForm}>
-        {/*{redirect && <Redirect to="/films"/>}*/}
-
-        {/* ui grid START */}
-        <div className="ui  grid">
-          <div className="twelve wide column">
-            {/* Title START  */}
-            <div className={errors.title ? "field error" : "field"}>
-              <label>Film title</label>
-              <input
-                value={form.title}
-                onChange={handleSubmit}
-                type="text"
-                name="title"
-                id="name"
-                placeholder="film title"
-              />
-              <FormMessage>{errors.title}</FormMessage>
-            </div>
-            {/* Title END  */}
-
-            {/* Description START  */}
-            <div className={errors.description ? "field error" : "field"}>
-              <label>Film description</label>
-              <textarea
-                value={form.description}
-                onChange={handleSubmit}
-                name="description"
-                id="description"
-                placeholder="film description"
-              ></textarea>
-              <FormMessage>{errors.description}</FormMessage>
-            </div>
-            {/* Description END  */}
+      {/* ui grid START */}
+      <div className="ui  grid">
+        <div className="twelve wide column">
+          {/* Title START  */}
+          <div className={errors.title ? "field error" : "field"}>
+            <label>Film title</label>
+            <input
+              value={data.title}
+              onChange={setFormObj(data, setData)}
+              type="text"
+              name="title"
+              id="name"
+              placeholder="film title"
+            />
+            <FormMessage>{errors.title}</FormMessage>
           </div>
+          {/* Title END  */}
 
-          {/* Image START
+          {/* Description START  */}
+          <div className={errors.description ? "field error" : "field"}>
+            <label>Film description</label>
+            <textarea
+              value={data.description}
+              onChange={setFormObj(data, setData)}
+              name="description"
+              id="description"
+              placeholder="film description"
+            ></textarea>
+            <FormMessage>{errors.description}</FormMessage>
+          </div>
+          {/* Description END  */}
+        </div>
+
+        {/* Image START
           "http://via.placeholder.com/250x250"
           */}
-          <div className="four wide column">
-            <ReactImageFallback
-              src={form.img}
-              fallbackImage="http://via.placeholder.com/250x250"
-              alt={form.title}
-              className="ui image"
-            />
-          </div>
+        <div className="four wide column">
+          <ReactImageFallback
+            src={data.img}
+            fallbackImage="http://via.placeholder.com/250x250"
+            alt={data.title}
+            className="ui image"
+          />
+        </div>
 
-          <div className="twelve wide column">
-            <div className={errors.img ? "field error" : "field"}>
-              <label>Image</label>
-              <input
-                value={form.img}
-                onChange={handleSubmit}
-                type="text"
-                name="img"
-                id="img"
-                placeholder="img"
-              />
-              <FormMessage>{errors.img}</FormMessage>
-            </div>
-          </div>
-          {/* Image END   */}
-
-          {/* Director START  */}
-          <div className="six wide column">
-            <div className={errors.director ? "field error" : "field"}>
-              <label>Director</label>
-              <input
-                value={form.director}
-                onChange={handleSubmit}
-                type="text"
-                name="director"
-                id="director"
-                placeholder="film director"
-              />
-              <FormMessage>{errors.director}</FormMessage>
-            </div>
-          </div>
-          {/* Director END   */}
-
-          {/* Duration START  */}
-          <div className="six wide column">
-            <div className={errors.duration ? "field error" : "field"}>
-              <label>Duration</label>
-              <input
-                value={form.duration}
-                onChange={handleSubmit}
-                type="number"
-                name="duration"
-                id="duration"
-                placeholder="Duration"
-                min={0}
-              />
-              <FormMessage>{errors.duration}</FormMessage>
-            </div>
-          </div>
-          {/*  Duration END   */}
-
-          {/* Price START  */}
-          <div className="six wide column">
-            <div className={errors.price ? "field error" : "field"}>
-              <label>Price</label>
-              <input
-                value={form.price}
-                onChange={handleSubmit}
-                type="number"
-                name="price"
-                id="price"
-                placeholder="price"
-              />
-              <FormMessage>{errors.price}</FormMessage>
-            </div>
-          </div>
-          {/*  Price END   */}
-
-          {/* Featured START  */}
-          <div className="six wide column inline field">
-            <label htmlFor="featured">Featured</label>
+        <div className="twelve wide column">
+          <div className={errors.img ? "field error" : "field"}>
+            <label>Image</label>
             <input
-              onChange={handleSubmit}
-              value={form.featured}
-              type="checkbox"
-              name="featured"
-              id="featured"
-              checked={form.featured}
+              value={data.img}
+              onChange={setFormObj(data, setData)}
+              type="text"
+              name="img"
+              id="img"
+              placeholder="img"
             />
+            <FormMessage>{errors.img}</FormMessage>
           </div>
-          {/*  Featured END   */}
         </div>
-        {/* ui grid END */}
+        {/* Image END   */}
 
-        {/*  Buttons START */}
-
-        <div className="ui fluid buttons px-3">
-          <button className="ui button primary" type="submit">
-            Save
-          </button>
-
-          <div className="or"></div>
-
-          <Link to="/films" className="ui button">
-            Hide form
-          </Link>
+        {/* Director START  */}
+        <div className="six wide column">
+          <div className={errors.director ? "field error" : "field"}>
+            <label>Director</label>
+            <input
+              value={data.director}
+              onChange={setFormObj(data, setData)}
+              type="text"
+              name="director"
+              id="director"
+              placeholder="film director"
+            />
+            <FormMessage>{errors.director}</FormMessage>
+          </div>
         </div>
-        {/*  Buttons END */}
-      </form>
-    )
-  }
+        {/* Director END   */}
+
+        {/* Duration START  */}
+        <div className="six wide column">
+          <div className={errors.duration ? "field error" : "field"}>
+            <label>Duration</label>
+            <input
+              value={data.duration}
+              onChange={setFormObj(data, setData)}
+              type="number"
+              name="duration"
+              id="duration"
+              placeholder="Duration"
+              min={0}
+            />
+            <FormMessage>{errors.duration}</FormMessage>
+          </div>
+        </div>
+        {/*  Duration END   */}
+
+        {/* Price START  */}
+        <div className="six wide column">
+          <div className={errors.price ? "field error" : "field"}>
+            <label>Price</label>
+            <input
+              value={data.price}
+              onChange={setFormObj(data, setData)}
+              type="number"
+              name="price"
+              id="price"
+              placeholder="price"
+            />
+            <FormMessage>{errors.price}</FormMessage>
+          </div>
+        </div>
+        {/*  Price END   */}
+
+        {/* Featured START  */}
+        <div className="six wide column inline field">
+          <label htmlFor="featured">Featured</label>
+          <input
+            onChange={setFormObj(data, setData)}
+            value={data.featured}
+            type="checkbox"
+            name="featured"
+            id="featured"
+            checked={data.featured}
+          />
+        </div>
+        {/*  Featured END   */}
+      </div>
+      {/* ui grid END */}
+
+      {/*  Buttons START */}
+
+      <div className="ui fluid buttons px-3">
+        <button className="ui button primary" type="submit">
+          Save
+        </button>
+
+        <div className="or"></div>
+
+        <Link to="/films" className="ui button">
+          Hide form
+        </Link>
+      </div>
+      {/*  Buttons END */}
+    </form>
+  )
+}
 
 export default FilmForm
