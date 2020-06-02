@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, useState, useEffect} from "react";
 import TopNavigation from "./TopNavigation";
 import {Route} from "react-router-dom";
 import jwtDecode from "jwt-decode";
@@ -18,73 +18,66 @@ const FilmsPage = Async(lazyImport("./FilmsPage"))
 const SignupPage = Async(lazyImport("./SignupPage"))
 const LoginPage = Async(lazyImport("./LoginPage"))
 
-export class App extends Component {
+const initialUser = {
+  token: undefined,
+  role: 'user'
+}
+const App = props => {
 
-  state = {
-    user: {
-      token: undefined
-    },
-    message: ''
-  }
+  const [user, setUser] = useState(initialUser);
+  const [message, setMessage] = useState('');
 
-  setMessage = (message) => this.setState({message: message})
-
-  componentDidMount() {
+  useEffect(() => {
     if (localStorage.filmsToken) {
-      this.setState({
-
-        user: {
+      setUser({
           token: localStorage.filmsToken,
           role: jwtDecode(localStorage.filmsToken).user.role
-        }
       })
       setAuthorizationHeader(localStorage.filmsToken)
     }
-  }
+  }, [])
 
-  logout = () => {
-    this.setState({user:{ token: null}})
+  const logout = () => {
+    setUser({token: null})
     setAuthorizationHeader()
     delete localStorage.filmsToken
-    this.setMessage('Bye bye')
+    setMessage('Bye bye')
   }
 
-  login = (token) => {
+  const login = (token) => {
     console.log(jwtDecode(token));
-    this.setState({user:{
+    setUser({
       token: token,
       role: jwtDecode(token).user.role
-    }})
+    })
     localStorage.filmsToken = token
     setAuthorizationHeader(token)
-    this.setMessage('You are welcome')
+    setMessage('You are welcome')
   }
 
-  signup = () => {
-    this.setMessage('Congratulations on our team')
+  const signup = () => {
+    setMessage('Congratulations on our team')
   }
 
-  render() {
     return (
       <div className="ui container pt-3">
-        <FlashMessage>{this.state.message}</FlashMessage>
-        <TopNavigation logout={this.logout} isAuth={this.state.user.token} isAdmin={this.state.user.role === 'admin'} />
+        <FlashMessage>{message}</FlashMessage>
+        <TopNavigation logout={logout} isAuth={user.token} isAdmin={user.role === 'admin'} />
         <Route exact path="/">
           <HomePage/>
         </Route>
         <Route path="/films"  render={
-          props => (<FilmsPage {...props} user={this.state.user}/>)
+          props => (<FilmsPage {...props} user={user}/>)
         }/>
         <Route path="/film/:_id" exact component={Film} />
         <Route path="/signup" exact render={
-            props => <SignupPage {...props} signup={this.signup} />
+            props => <SignupPage {...props} signup={signup} />
         }/>
         <Route path="/login" exact render={
-            props => <LoginPage {...props} login={this.login} />
+            props => <LoginPage {...props} login={login} />
         } />
       </div>
     )
   }
-}
 
 export default App
