@@ -20,8 +20,6 @@ const LoginForm = props => {
 
     return errors
   }
-
-
   const handleSubmit = e => {
     e.preventDefault()
     const errors = validate(form)
@@ -42,7 +40,7 @@ const LoginForm = props => {
   return (
     <form className={cls} onSubmit={handleSubmit}>
       <div className={errors.email ? "error field" : "field"}>
-        <label>Email</label>
+        <label htmlFor="email">Email</label>
         <input
           type="email"
           name="email"
@@ -55,7 +53,7 @@ const LoginForm = props => {
       </div>
 
       <div className={errors.password ? "error field" : "field"}>
-        <label>Password</label>
+        <label htmlFor="password">Password</label>
         <input
           type="text"
           name="password"
@@ -67,7 +65,7 @@ const LoginForm = props => {
         <FormMessage>{errors.password}</FormMessage>
       </div>
       <div className="ui fluid buttons">
-        <button className="ui button primary">Login</button>
+        <button data-test-id="login-button" className="ui button primary">Login</button>
 
         <div className="or" />
 
