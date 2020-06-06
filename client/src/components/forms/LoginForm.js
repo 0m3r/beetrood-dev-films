@@ -65,7 +65,7 @@ const LoginForm = props => {
         <FormMessage>{errors.password}</FormMessage>
       </div>
       <div className="ui fluid buttons">
-        <button data-test-id="login-button" className="ui button primary">Login</button>
+        <button data-testid="login-button" className="ui button primary">Login</button>
 
         <div className="or" />
 

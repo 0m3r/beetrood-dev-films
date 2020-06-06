@@ -47,7 +47,7 @@ exports[`Snapshot  1`] = `
   >
     <button
       class="ui button primary"
-      data-test-id="login-button"
+      data-testid="login-button"
     >
       Login
     </button>
