@@ -35,10 +35,10 @@ expect.extend({toHaveAttribute, toHaveTextContent})
 
 test("LoginForm should render correct", () => {
     const { getByLabelText } = render(
-    <MemoryRouter>
-    <LoginForm />
-    </MemoryRouter>
-);
+        <MemoryRouter>
+        <LoginForm />
+        </MemoryRouter>
+    );
     const emailEl = getByLabelText(/email/i)
     expect(emailEl).toHaveAttribute("type", "email");
 })
@@ -50,4 +50,15 @@ test("Debug dom", () => {
         </MemoryRouter>
         );
     debug();
+});
+
+
+test("Snapshot ", () => {
+    const { container } = render(
+        <MemoryRouter>
+        <LoginForm />
+        </MemoryRouter>
+    );
+
+    expect(container.firstChild).toMatchSnapshot()
 })
