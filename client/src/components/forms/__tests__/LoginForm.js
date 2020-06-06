@@ -42,3 +42,12 @@ test("LoginForm should render correct", () => {
     const emailEl = getByLabelText(/email/i)
     expect(emailEl).toHaveAttribute("type", "email");
 })
+
+test("Debug dom", () => {
+    const {debug} =  render(
+        <MemoryRouter>
+            <LoginForm />
+        </MemoryRouter>
+        );
+    debug();
+})
