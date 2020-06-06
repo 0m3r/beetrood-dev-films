@@ -1,18 +1,19 @@
 import React from "react";
 import LoginForm from "../LoginForm";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 import {MemoryRouter} from "react-router-dom";
 import { toHaveAttribute, toHaveTextContent} from "@testing-library/jest-dom/matchers";
-import {queries, getQueriesForElement} from "@testing-library/dom";
+// import {queries, getQueriesForElement} from "@testing-library/dom";
+import {render} from "@testing-library/react"
 
 expect.extend({toHaveAttribute, toHaveTextContent})
 
-function render(ui) {
-    const container = document.createElement('div');
-    ReactDOM.render(ui, container);
-    const queries = getQueriesForElement(container)
-    return {...queries, container}
-}
+// function render(ui) {
+//     const container = document.createElement('div');
+//     ReactDOM.render(ui, container);
+//     const queries = getQueriesForElement(container)
+//     return {...queries, container}
+// }
 
 // test("LoginFrom  should render correct", () => {
 //     const div  = document.createElement("div");
