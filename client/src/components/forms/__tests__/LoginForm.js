@@ -4,7 +4,8 @@ import LoginForm from "../LoginForm";
 import {MemoryRouter} from "react-router-dom";
 import { toHaveAttribute, toHaveTextContent} from "@testing-library/jest-dom/matchers";
 // import {queries, getQueriesForElement} from "@testing-library/dom";
-import {render, fireEvent} from "@testing-library/react"
+import {render, fireEvent} from "@testing-library/react";
+// import user from "@testing-library/user-event";
 
 expect.extend({toHaveAttribute, toHaveTextContent})
 
@@ -85,4 +86,22 @@ test("LoginForm submit test", () => {
     fireEvent.click(loginButton)
     expect(submit).toHaveBeenCalledTimes(1);
     expect(submit).toHaveBeenCalledWith(data)
+})
+
+test("LoginForm submit test with user-event", () => {
+    const { debug, getByLabelText, getByTestId } = render(
+        <MemoryRouter>
+        <LoginForm submit={submit}/>
+        </MemoryRouter>
+    );
+
+    // const emailElement = getByLabelText(/email/i);
+    // const passwordElement = getByLabelText(/password/i);
+    // fireEvent.change(emailElement, {target: {value: data.email}})
+    // fireEvent.change(passwordElement, {target: {value: data.password}})
+    //
+    // const loginButton = getByTestId("login-button")
+    // fireEvent.click(loginButton)
+    // expect(submit).toHaveBeenCalledTimes(1);
+    // expect(submit).toHaveBeenCalledWith(data)
 })
