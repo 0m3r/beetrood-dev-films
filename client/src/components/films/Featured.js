@@ -5,7 +5,7 @@ import FilmContext from "../context/FilmContext"
 const Featured = ({featured, id}) => {
   const {toggleFeatured} = React.useContext(FilmContext)
   const cls = featured ? "yellow" : "empty"
-  return (
+  return  (
     <span className="ui right corner label" onClick={toggleFeatured(id)}>
       <i className={`star icon ${cls}`}></i>
     </span>

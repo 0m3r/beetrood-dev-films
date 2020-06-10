@@ -105,3 +105,12 @@ test("LoginForm submit test with user-event", () => {
     // expect(submit).toHaveBeenCalledTimes(1);
     // expect(submit).toHaveBeenCalledWith(data)
 })
+
+test("Debug", () => {
+    const { debug } = render(
+        <MemoryRouter>
+        <LoginForm />
+        </MemoryRouter>
+    );
+    debug()
+})
