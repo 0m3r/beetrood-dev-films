@@ -49,7 +49,7 @@ const LoginForm = props => {
           value={form.email}
           onChange={setFormObj(form, setForm)}
         />
-        <FormMessage>{errors.email}</FormMessage>
+        {errors.email && <FormMessage>{errors.email}</FormMessage>}
       </div>
 
       <div className={errors.password ? "error field" : "field"}>
@@ -62,7 +62,7 @@ const LoginForm = props => {
           value={form.password}
           onChange={setFormObj(form, setForm)}
         />
-        <FormMessage>{errors.password}</FormMessage>
+        {errors.password && <FormMessage>{errors.password}</FormMessage>}
       </div>
       <div className="ui fluid buttons">
         <button data-testid="login-button" className="ui button primary">Login</button>
